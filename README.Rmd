@@ -1,0 +1,52 @@
+---
+title: "SIG5field_codes"
+author: "Haruki Nishio"
+date: "2022/9/11"
+---
+
+```{r setting, include=F}
+knitr::opts_chunk$set(echo = F, warning = F)
+
+# Load libraries
+library(rmdformats)
+library(knitr)
+```
+
+### 01_SSM_diff_MarSep.R
+The R code for state space modeling to evaluate the differences in gene expression between March and September in 2015.
+
+### 02_SSM_diff_SunShade.R
+The R code for state space modeling to evaluate the differences in gene expression between sun and shade conditions in 2015.
+
+### 03_SSM_diff_local.R
+The R code for state space modeling to evaluate the differences in gene expression between different conditions in the local manipulation experiment in 2016.
+
+### 04_SSM_regression_MarSep_CCA1_muCommon_LagTempLight0_WAIC.R
+The R code for state space modeling to evaluate the influences of temperature and light on AhgCCA1 expression in March and September, 2015.
+
+### 05_SSM_regression_MarSep_SIG5_muCommon_LagTempLight0_WAIC_rev2.R
+The R code for state space modeling to evaluate the influences of temperature, light and AhgCCA1 on AhgSIG5 expression in March and September, 2015.
+
+### 06_SSM_regression_MarSep_BLRP_muCommon_LagTempLight0_WAIC_rev2.R
+The R code for state space modeling to evaluate the influences of temperature, light and AhgSIG5 on AhgBLRP expression in March and September, 2015.
+
+### 07_SSM_regression_Mar_SIG5_muCommon_LagTempLight0_WAIC_rev2.R
+The R code for state space modeling to evaluate the influences of temperature, light and AhgCCA1 on AhgSIG5 expression in March, 2015.
+
+### 08_SSM_regression_Sep_SIG5_muCommon_LagTempLight0_WAIC_rev2.R
+The R code for state space modeling to evaluate the influences of temperature, light and AhgCCA1 on AhgSIG5 expression in September, 2015.
+
+### 09_SSM_regression_Mar_BLRP_muCommon_LagTempLight0_WAIC_rev2.R
+The R code for state space modeling to evaluate the influences of temperature, light and AhgSIG5 on AhgBLRP expression in March, 2015.
+
+### 10_SSM_regression_Sep_BLRP_muCommon_LagTempLight0_WAIC_rev2.R
+The R code for state space modeling to evaluate the influences of temperature, light and AhgSIG5 on AhgBLRP expression in September, 2015.
+
+### 11_cor_RMSE_loglik_MarSep_LagTempLight0_rev2.R
+The R code to calculate correlation, RMSE and log-likelihood of the models predicted using the codes 05 and 06 against the observed values.
+
+### 12_cor_RMSE_loglik_Mar_or_Sep_LagTempLight0_rev2.R
+The R code to calculate correlation, RMSE and log-likelihood of the models predicted using the codes 07-10 against the observed values.
+
+### Rmd files
+The Rmd codes to draw the main Figures and Supplementary Figures.

@@ -1,0 +1,362 @@
+---
+title: ""
+author: ""
+date: ""
+output: 
+  pdf_document: 
+    fig_caption: yes
+  css: SIG5_211203.css
+classoption: a4paper
+---
+
+\pagenumbering{gobble}
+
+```{r setting, include=F}
+knitr::opts_chunk$set(echo = FALSE)
+
+## Load packages
+library(tidyverse)
+library(patchwork)
+```
+
+```{r Mar_or_Sep, fig.align="center", fig.dim=c(4.8, 5.4)}
+##### March #####
+## Load data
+load("data/cor_RMSE_loglik_Mar_or_Sep_LagTempLight0_rev2.RData")
+
+### RMSE
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5_Mar$rmse_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5_Mar$rmse_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.min(df_cor_rmse_loglik_SIG5_Mar$rmse_50) - 1
+
+g_rmse_SIG5_Mar <- ggplot(df_cor_rmse_loglik_SIG5_Mar, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = rmse_2.5, ymax = rmse_97.5)) +
+  geom_point(aes(y = rmse_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), " (Mar)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="RMSE",
+       tag = "A")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP_Mar$rmse_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP_Mar$rmse_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.min(df_cor_rmse_loglik_BLRP_Mar$rmse_50) - 1
+
+g_rmse_BLRP_Mar <- ggplot(df_cor_rmse_loglik_BLRP_Mar, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = rmse_2.5, ymax = rmse_97.5)) +
+  geom_point(aes(y = rmse_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), " (Mar)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="RMSE",
+       tag = "D")
+
+
+### Log-likelihood
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5_Mar$loglik_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5_Mar$loglik_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_SIG5_Mar$loglik_50) - 1
+
+g_loglik_SIG5_Mar <- ggplot(df_cor_rmse_loglik_SIG5_Mar, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = loglik_2.5, ymax = loglik_97.5)) +
+  geom_point(aes(y = loglik_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), " (Mar)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="Log-likelihood",
+       tag = "B")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP_Mar$loglik_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP_Mar$loglik_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_BLRP_Mar$loglik_50) - 1
+
+g_loglik_BLRP_Mar <- ggplot(df_cor_rmse_loglik_BLRP_Mar, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = loglik_2.5, ymax = loglik_97.5)) +
+  geom_point(aes(y = loglik_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), " (Mar)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="Log-likelihood",
+       tag = "E")
+
+### cor
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5_Mar$cor_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5_Mar$cor_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_SIG5_Mar$cor_50) - 1
+
+g_cor_SIG5_Mar <- ggplot(df_cor_rmse_loglik_SIG5_Mar, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = cor_2.5, ymax = cor_97.5)) +
+  geom_point(aes(y = cor_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), " (Mar)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="Correlation",
+       tag = "C")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP_Mar$cor_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP_Mar$cor_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_BLRP_Mar$cor_50) - 1
+
+g_cor_BLRP_Mar <- ggplot(df_cor_rmse_loglik_BLRP_Mar, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = cor_2.5, ymax = cor_97.5)) +
+  geom_point(aes(y = cor_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), " (Mar)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="Correlation",
+       tag = "F")
+
+
+##### September #####
+
+### RMSE
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5_Sep$rmse_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5_Sep$rmse_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.min(df_cor_rmse_loglik_SIG5_Sep$rmse_50) - 1
+
+g_rmse_SIG5_Sep <- ggplot(df_cor_rmse_loglik_SIG5_Sep, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = rmse_2.5, ymax = rmse_97.5)) +
+  geom_point(aes(y = rmse_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), " (Sep)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="RMSE",
+       tag = "G")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP_Sep$rmse_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP_Sep$rmse_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.min(df_cor_rmse_loglik_BLRP_Sep$rmse_50) - 1
+
+g_rmse_BLRP_Sep <- ggplot(df_cor_rmse_loglik_BLRP_Sep, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = rmse_2.5, ymax = rmse_97.5)) +
+  geom_point(aes(y = rmse_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), " (Sep)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="RMSE",
+       tag = "J")
+
+
+### Log-likelihood
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5_Sep$loglik_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5_Sep$loglik_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_SIG5_Sep$loglik_50) - 1
+
+g_loglik_SIG5_Sep <- ggplot(df_cor_rmse_loglik_SIG5_Sep, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = loglik_2.5, ymax = loglik_97.5)) +
+  geom_point(aes(y = loglik_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), " (Sep)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="Log-likelihood",
+       tag = "H")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP_Sep$loglik_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP_Sep$loglik_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_BLRP_Sep$loglik_50) - 1
+
+g_loglik_BLRP_Sep <- ggplot(df_cor_rmse_loglik_BLRP_Sep, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = loglik_2.5, ymax = loglik_97.5)) +
+  geom_point(aes(y = loglik_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), " (Sep)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="Log-likelihood",
+       tag = "K")
+
+
+### cor
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5_Sep$cor_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5_Sep$cor_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_SIG5_Sep$cor_50) - 1
+
+g_cor_SIG5_Sep <- ggplot(df_cor_rmse_loglik_SIG5_Sep, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = cor_2.5, ymax = cor_97.5)) +
+  geom_point(aes(y = cor_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), " (Sep)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="Correlation",
+       tag = "I")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP_Sep$cor_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP_Sep$cor_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_BLRP_Sep$cor_50) - 1
+
+g_cor_BLRP_Sep <- ggplot(df_cor_rmse_loglik_BLRP_Sep, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = cor_2.5, ymax = cor_97.5)) +
+  geom_point(aes(y = cor_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), " (Sep)", sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="Correlation",
+       tag = "L")
+
+
+## Integration of all plots into a figure
+g <- g_rmse_SIG5_Mar + g_loglik_SIG5_Mar + g_cor_SIG5_Mar + 
+  g_rmse_BLRP_Mar + g_loglik_BLRP_Mar + g_cor_BLRP_Mar + 
+  g_rmse_SIG5_Sep + g_loglik_SIG5_Sep + g_cor_SIG5_Sep + 
+  g_rmse_BLRP_Sep + g_loglik_BLRP_Sep + g_cor_BLRP_Sep + 
+  plot_layout(nrow = 4) &
+#plot_annotation(title = "Fig. S4") &
+theme(plot.tag = element_text(size = 10))
+g
+```
+

@@ -1,0 +1,170 @@
+---
+title: ""
+author: ""
+date: ""
+output: 
+  pdf_document: 
+    fig_caption: yes
+  css: SIG5_211203.css
+classoption: a4paper
+---
+
+\pagenumbering{gobble}
+
+```{r setting, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+
+# Load libraries
+library(ggpubr)
+library(tidyverse)
+library(patchwork)
+library(rmdformats)
+library(knitr)
+library(data.table)
+
+# Load plot function
+source("functions/Plot_functions_220813.R")
+```
+
+```{r MarSep, fig.align="center", fig.dim=c(5, 9.5)}
+
+### CCA1
+# Load output
+data <- read.csv("data/march_data.csv")
+data_MarSun <- subset(data, Condition=="Sun")
+data_MarShade <- subset(data, Condition=="Shade")
+data <- read.csv("data/september_data.csv")
+data_SepSun <- subset(data, Condition=="Sun")
+data_SepShade <- subset(data, Condition=="Shade")
+df <- as.data.frame(fread("SSM_out/SSM_regression_MarSep_CCA1_muCommon_out_Lagtemp0_Laglight0_WAIC_99.csv"))
+
+# Adjustment of data frame
+df_alpha_MarSun <- df %>% filter(str_starts(par, "alpha_MarSun")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_MarShade <- df %>% filter(str_starts(par, "alpha_MarShade")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_SepSun <- df %>% filter(str_starts(par, "alpha_SepSun")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_SepShade <- df %>% filter(str_starts(par, "alpha_SepShade")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_temp <- df %>% filter(str_starts(par, "b_temp")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_light <- df %>% filter(str_starts(par, "b_light")) %>% select(c("2.5%", "50%", "97.5%"))
+
+df_CCA1 <- as.data.frame(cbind(df_alpha_MarSun, df_alpha_MarShade, df_alpha_SepSun, df_alpha_SepShade, df_b_temp, df_b_light, unique(data$Time)))
+names(df_CCA1) <- c("alpha_MarSun_2.5", "alpha_MarSun_50", "alpha_MarSun_97.5", 
+                            "alpha_MarShade_2.5", "alpha_MarShade_50", "alpha_MarShade_97.5",
+                            "alpha_SepSun_2.5", "alpha_SepSun_50", "alpha_SepSun_97.5", 
+                            "alpha_SepShade_2.5", "alpha_SepShade_50", "alpha_SepShade_97.5",
+                            "b_temp_2.5", "b_temp_50", "b_temp_97.5",
+                            "b_light_2.5", "b_light_50", "b_light_97.5",
+                            "time")
+
+df_CCA1_rev <- cbind(df_CCA1,
+                     data.frame(data_MarSun = tapply(data_MarSun$CCA1, data_MarSun$Time, mean),
+                                data_MarShade = tapply(data_MarShade$CCA1, data_MarShade$Time, mean),
+                                data_SepSun = tapply(data_SepSun$CCA1, data_SepSun$Time, mean),
+                                data_SepShade = tapply(data_SepShade$CCA1, data_SepShade$Time, mean)))
+
+# Draw figures
+glist_AhgCCA1_MarSep <- Pred_vis2(df1=df_CCA1_rev, df2=NULL, var="AhgCCA1")
+
+
+
+### SIG5
+# Load output
+df <- as.data.frame(fread("SSM_out/SSM_regression_MarSep_SIG5_muCommon_out_Lagtemp0_Laglight0_LagCCA13_WAIC_rev2_99.csv"))
+
+
+# Adjustment of data frame
+df_alpha_MarSun <- df %>% filter(str_starts(par, "alpha_MarSun")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_MarShade <- df %>% filter(str_starts(par, "alpha_MarShade")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_SepSun <- df %>% filter(str_starts(par, "alpha_SepSun")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_SepShade <- df %>% filter(str_starts(par, "alpha_SepShade")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_temp <- df %>% filter(str_starts(par, "b_temp")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_light <- df %>% filter(str_starts(par, "b_light")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_CCA1 <- df %>% filter(str_starts(par, "b_CCA1")) %>% select(c("2.5%", "50%", "97.5%"))
+
+df_SIG5 <- as.data.frame(cbind(df_alpha_MarSun, df_alpha_MarShade, df_alpha_SepSun, df_alpha_SepShade, df_b_temp, df_b_light, df_b_CCA1, unique(data$Time)))
+names(df_SIG5) <- c("alpha_MarSun_2.5", "alpha_MarSun_50", "alpha_MarSun_97.5", 
+                    "alpha_MarShade_2.5", "alpha_MarShade_50", "alpha_MarShade_97.5",
+                    "alpha_SepSun_2.5", "alpha_SepSun_50", "alpha_SepSun_97.5", 
+                    "alpha_SepShade_2.5", "alpha_SepShade_50", "alpha_SepShade_97.5",
+                    "b_temp_2.5", "b_temp_50", "b_temp_97.5",
+                    "b_light_2.5", "b_light_50", "b_light_97.5",
+                    "b_CCA1_2.5", "b_CCA1_50", "b_CCA1_97.5",
+                    "time")
+
+df_SIG5_rev <- cbind(df_SIG5,
+                     data.frame(data_MarSun = tapply(data_MarSun$SIG5, data_MarSun$Time, mean),
+                                data_MarShade = tapply(data_MarShade$SIG5, data_MarShade$Time, mean),
+                                data_SepSun = tapply(data_SepSun$SIG5, data_SepSun$Time, mean),
+                                data_SepShade = tapply(data_SepShade$SIG5, data_SepShade$Time, mean)))
+
+df_SIG5_rev[1:3,] <- NA
+
+# Draw figures
+glist_AhgSIG5_MarSep <- Pred_vis2(df1=df_SIG5_rev, df2=NULL, var="AhgSIG5")
+
+
+
+### BLRP
+# Load output
+df <- as.data.frame(fread("SSM_out/SSM_regression_MarSep_BLRP_muCommon_out_Lagtemp0_Laglight0_LagSIG52_WAIC_rev2_99.csv"))
+
+# Adjustment of data frame
+df_alpha_MarSun <- df %>% filter(str_starts(par, "alpha_MarSun")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_MarShade <- df %>% filter(str_starts(par, "alpha_MarShade")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_SepSun <- df %>% filter(str_starts(par, "alpha_SepSun")) %>% select(c("2.5%", "50%", "97.5%"))
+df_alpha_SepShade <- df %>% filter(str_starts(par, "alpha_SepShade")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_temp <- df %>% filter(str_starts(par, "b_temp")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_light <- df %>% filter(str_starts(par, "b_light")) %>% select(c("2.5%", "50%", "97.5%"))
+df_b_SIG5 <- df %>% filter(str_starts(par, "b_SIG5")) %>% select(c("2.5%", "50%", "97.5%"))
+
+df_BLRP <- as.data.frame(cbind(df_alpha_MarSun, df_alpha_MarShade, df_alpha_SepSun, df_alpha_SepShade, df_b_temp, df_b_light, df_b_SIG5, unique(data$Time)))
+names(df_BLRP) <- c("alpha_MarSun_2.5", "alpha_MarSun_50", "alpha_MarSun_97.5", 
+                    "alpha_MarShade_2.5", "alpha_MarShade_50", "alpha_MarShade_97.5",
+                    "alpha_SepSun_2.5", "alpha_SepSun_50", "alpha_SepSun_97.5", 
+                    "alpha_SepShade_2.5", "alpha_SepShade_50", "alpha_SepShade_97.5",
+                    "b_temp_2.5", "b_temp_50", "b_temp_97.5",
+                    "b_light_2.5", "b_light_50", "b_light_97.5",
+                    "b_SIG5_2.5", "b_SIG5_50", "b_SIG5_97.5",
+                    "time")
+
+df_BLRP_rev <- cbind(df_BLRP,
+                     data.frame(data_MarSun = tapply(data_MarSun$BLRP, data_MarSun$Time, mean),
+                                data_MarShade = tapply(data_MarShade$BLRP, data_MarShade$Time, mean),
+                                data_SepSun = tapply(data_SepSun$BLRP, data_SepSun$Time, mean),
+                                data_SepShade = tapply(data_SepShade$BLRP, data_SepShade$Time, mean)))
+
+df_BLRP_rev[1:2,] <- NA
+
+# Draw figures
+glist_AhgBLRP_MarSep <- Pred_vis2(df1=df_BLRP_rev, df2=NULL, var="AhgpsbD BLRP")
+
+
+
+### Integration of all plots into a figure
+glist_all <- c(glist_AhgCCA1_MarSep, glist_AhgSIG5_MarSep, glist_AhgBLRP_MarSep)
+
+void <- ggplot() + theme_void()
+
+(glist_all[[1]] + labs(tag = "A")) + 
+(glist_all[[2]] + labs(tag = "B")) + 
+(glist_all[[3]] + labs(tag = "C")) +
+(glist_all[[4]] + labs(tag = "D")) +
+
+(glist_all[[6]] + labs(tag = "E")) +
+(glist_all[[7]] + labs(tag = "F")) +
+(glist_all[[8]] + labs(tag = "G")) +
+(glist_all[[9]] + labs(tag = "H")) +
+(glist_all[[10]] + labs(tag = "I")) +
+void +
+
+(glist_all[[12]] + labs(tag = "J")) +
+(glist_all[[13]] + labs(tag = "K")) +
+(glist_all[[14]] + labs(tag = "L")) +
+(glist_all[[15]] + labs(tag = "M")) +
+(glist_all[[16]] + labs(tag = "N")) +
+
+legend_MarSep2_dlm +
+
+plot_layout(ncol = 2, heights = c(1, 1, 1, 1, 1, 1, 1, 1)) + plot_annotation(title = "Fig. 3") &
+  theme(plot.tag = element_text(size = 10))
+```
+

@@ -1,0 +1,193 @@
+---
+title: ""
+author: ""
+date: ""
+output: 
+  pdf_document: 
+    fig_caption: yes
+  css: SIG5_211203.css
+classoption: a4paper
+---
+
+\pagenumbering{gobble}
+
+```{r setting, include=F}
+knitr::opts_chunk$set(echo = FALSE)
+
+## Load packages
+library(tidyverse)
+library(patchwork)
+```
+
+```{r MarSep, fig.align="center", fig.dim=c(4.7, 3)}
+## Load data
+load("data/cor_RMSE_loglik_MarSep_LagTempLight0_rev2.RData")
+
+
+### RMSE
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5$rmse_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5$rmse_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.min(df_cor_rmse_loglik_SIG5$rmse_50) - 1
+
+g_rmse_SIG5 <- ggplot(df_cor_rmse_loglik_SIG5, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = rmse_2.5, ymax = rmse_97.5)) +
+  geom_point(aes(y = rmse_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="RMSE",
+       tag = "A")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP$rmse_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP$rmse_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.min(df_cor_rmse_loglik_BLRP$rmse_50) - 1
+
+g_rmse_BLRP <- ggplot(df_cor_rmse_loglik_BLRP, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = rmse_2.5, ymax = rmse_97.5)) +
+  geom_point(aes(y = rmse_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="RMSE",
+       tag = "D")
+
+
+### log likelihood
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5$loglik_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5$loglik_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_SIG5$loglik_50) - 1
+
+g_loglik_SIG5 <- ggplot(df_cor_rmse_loglik_SIG5, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = loglik_2.5, ymax = loglik_97.5)) +
+  geom_point(aes(y = loglik_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="Log-likelihood",
+       tag = "B")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP$loglik_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP$loglik_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_BLRP$loglik_50) - 1
+
+g_loglik_BLRP <- ggplot(df_cor_rmse_loglik_BLRP, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = loglik_2.5, ymax = loglik_97.5)) +
+  geom_point(aes(y = loglik_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="Log-likelihood",
+       tag = "E")
+
+
+### cor
+# SIG5
+ymax <- max(df_cor_rmse_loglik_SIG5$cor_97.5)
+ymin <- min(df_cor_rmse_loglik_SIG5$cor_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_SIG5$cor_50) - 1
+
+g_cor_SIG5 <- ggplot(df_cor_rmse_loglik_SIG5, aes(x=Lag_CCA1)) +
+  geom_linerange(aes(ymin = cor_2.5, ymax = cor_97.5)) +
+  geom_point(aes(y = cor_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgSIG5), sep = "")),
+       x=expression(paste("Lag of ", italic(AhgCCA1), " (h)", sep = "")), 
+       y="Correlation",
+       tag = "C")
+
+# BLRP
+ymax <- max(df_cor_rmse_loglik_BLRP$cor_97.5)
+ymin <- min(df_cor_rmse_loglik_BLRP$cor_2.5)
+yrange <- ymax - ymin
+yceiling <- ymax + yrange * 0.2
+yfloor <- ymin - yrange * 0.1
+yasterisk <- ymax + yrange * 0.07
+xasterisk <- which.max(df_cor_rmse_loglik_BLRP$cor_50) - 1
+
+g_cor_BLRP <- ggplot(df_cor_rmse_loglik_BLRP, aes(x=Lag_SIG5)) +
+  geom_linerange(aes(ymin = cor_2.5, ymax = cor_97.5)) +
+  geom_point(aes(y = cor_50)) +
+  annotate("text", x = xasterisk, y = yasterisk, label = "*", size = 5) +
+  coord_cartesian(xlim = c(-0.2, 4.2), ylim = c(yfloor, yceiling)) +
+  scale_x_continuous(labels=seq(0,8,2)) +
+  #coord_flip() +
+  theme_bw(base_size = 7) +
+  theme(axis.title=element_text(size=7), 
+        axis.text=element_text(size=7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(face = "bold")) +
+  labs(title=expression(paste(italic(AhgBLRP), sep = "")),
+       x=expression(paste("Lag of ", italic(AhgSIG5), " (h)", sep = "")), 
+       y="Correlation",
+       tag = "F")
+
+## Integration of all plots into a figure
+g <- g_rmse_SIG5 + g_loglik_SIG5 + g_cor_SIG5 + g_rmse_BLRP + g_loglik_BLRP + g_cor_BLRP + plot_layout(nrow = 2) + plot_annotation(title = "Fig. 2") &
+  theme(plot.tag = element_text(size = 10))
+g
+```
+

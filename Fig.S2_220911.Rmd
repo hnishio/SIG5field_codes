@@ -1,0 +1,163 @@
+---
+title: ""
+author: ""
+date: ""
+output: 
+  pdf_document: 
+    fig_caption: yes
+  css: SIG5_211203.css
+classoption: a4paper
+---
+
+\pagenumbering{gobble}
+
+```{r setting, include=F}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+
+# Load libraries
+library(ggpubr)
+library(tidyverse)
+library(patchwork)
+library(rmdformats)
+library(knitr)
+library(data.table)
+
+# Load plot function
+source("functions/Plot_functions_220813.R")
+
+# Load output
+load("SSM_out/SSM_diff_SunShade_out.RData")
+```
+
+```{r SunShade, fig.align="center", fig.dim=c(5, 9)}
+##### March sun x shaded
+
+### Irradiance
+environment_data_march <- read.csv("data/environment_data_corrected_march.csv")
+environment_data_march$Condition = factor(environment_data_march$Condition, levels=c("Sun", "Shade"))
+
+# plot code:
+irradiance_mar <- ggplot(environment_data_march, aes(x=Time, y=Irradiance, group=Condition, color=Condition)) + 
+  annotate("rect", xmin = 12, xmax = 24, ymin = 0, ymax = 2500, alpha = 0.3, fill = "gray50")+
+  #geom_point(aes(color=Condition), shape=19, size=1, alpha = 0.6, stroke = 1.2)+
+  geom_line(aes(color=Condition), size= 1, alpha = 1) +
+  theme_classic(7) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 7),
+        axis.title = element_text(size = 7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(size = 7, face = "bold"))+
+  scale_colour_manual(values=c("orange", "gray30"))+
+  scale_fill_manual(values=c("orange", "gray30"))+
+  scale_y_continuous(expand = c(0, 0), breaks=seq(0,2500,500))+
+  scale_x_continuous(breaks=seq(12,30,6))+
+  labs(title = "Irradiance (March/Spring)", tag = "A", 
+       x = "Time relative to initial dawn (h)", 
+       y = expression(atop("Total irradiance", paste(~(mu~mol~m^{-2}~s^{-1})))))
+
+
+
+### Temperature
+
+# plot code:
+temperature_mar <- ggplot(environment_data_march, aes(x=Time, y=Temperature, group=Condition, color=Condition)) + 
+  annotate("rect", xmin = 12, xmax = 24, ymin = 0, ymax = 30, alpha = 0.3, fill = "gray50")+
+  #geom_point(aes(color=Condition), shape=19, size=1, alpha = 0.6, stroke = 1.2)+
+  geom_line(aes(color=Condition), size= 1, alpha = 1) +
+  theme_classic(7) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 7),
+        axis.title = element_text(size = 7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(size = 7, face = "bold"))+
+  scale_colour_manual(values=c("orange", "gray30"))+
+  scale_fill_manual(values=c("orange", "gray30"))+
+  scale_y_continuous(expand = c(0, 0), breaks=seq(0,30,5))+
+  scale_x_continuous(breaks=seq(12,30,6))+
+  labs(title = "Temperature (March/Spring)", tag = "C", 
+       x = "Time relative to initial dawn (h)", 
+       y = expression(atop("Temperature",  paste("(°C)" ))))
+
+
+
+##### September sun x shaded
+
+### Irradiance
+environment_data_september <- read.csv("data/environment_data_corrected_september.csv")
+environment_data_september$Condition = factor(environment_data_september$Condition, levels=c("Sun", "Shade"))
+
+# plot code:
+irradiance_sep <- ggplot(environment_data_september, aes(x=Time, y=Irradiance, group=Condition, color=Condition)) + 
+  annotate("rect", xmin = 12, xmax = 24, ymin = 0, ymax = 2500, alpha = 0.3, fill = "gray50")+
+  #geom_point(aes(color=Condition), shape=19, size=1, alpha = 0.6, stroke = 1.2)+
+  geom_line(aes(color=Condition), size= 1, alpha = 1) +
+  theme_classic(7) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 7),
+        axis.title = element_text(size = 7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(size = 7, face = "bold"))+
+  scale_colour_manual(values=c("orange", "gray30"))+
+  scale_fill_manual(values=c("orange", "gray30"))+
+  scale_y_continuous(expand = c(0, 0), breaks=seq(0,2500,500))+
+  scale_x_continuous(breaks=seq(12,30,6))+
+  labs(title = "Irradiance (September/Autumn)", tag = "B", 
+       x = "Time relative to initial dawn (h)", 
+       y = expression(atop("Total irradiance", paste(~(mu~mol~m^{-2}~s^{-1})))))
+
+
+
+### Temperature
+
+# plot code:
+temperature_sep <- ggplot(environment_data_september, aes(x=Time, y=Temperature, group=Condition, color=Condition)) + 
+  annotate("rect", xmin = 12, xmax = 24, ymin = 0, ymax = 30, alpha = 0.3, fill = "gray50")+
+  #geom_point(aes(color=Condition), shape=19, size=1, alpha = 0.6, stroke = 1.2)+
+  geom_line(aes(color=Condition), size= 1, alpha = 1) +
+  theme_classic(7) +
+  theme(legend.position = "none",
+        axis.text = element_text(size = 7),
+        axis.title = element_text(size = 7),
+        plot.title = element_text(size = 7),
+        plot.tag = element_text(size = 7, face = "bold"))+
+  scale_colour_manual(values=c("orange", "gray30"))+
+  scale_fill_manual(values=c("orange", "gray30"))+
+  scale_y_continuous(expand = c(0, 0), breaks=seq(0,30,5))+
+  scale_x_continuous(breaks=seq(12,30,6))+
+  labs(title = "Temperature (September/Autumn)", tag = "D", 
+       x = "Time relative to initial dawn (h)", 
+       y = expression(atop("Temperature",  paste("(°C)" ))))
+
+
+
+### Difference plot
+glist_AhgCCA1_Mar <- diff_vis_SunShade(df = result_df_AhgCCA1_Mar_rev, var = "AhgCCA1", season = "Mar")
+glist_AhgSIG5_Mar <- diff_vis_SunShade(df = result_df_AhgSIG5_Mar_rev, var = "AhgSIG5", season = "Mar")
+glist_AhgBLRP_Mar <- diff_vis_SunShade(df = result_df_AhgBLRP_Mar_rev, var = "AhgpsbD BLRP", season = "Mar")
+glist_AhgCCA1_Sep <- diff_vis_SunShade(df = result_df_AhgCCA1_Sep_rev, var = "AhgCCA1", season = "Sep")
+glist_AhgSIG5_Sep <- diff_vis_SunShade(df = result_df_AhgSIG5_Sep_rev, var = "AhgSIG5", season = "Sep")
+glist_AhgBLRP_Sep <- diff_vis_SunShade(df = result_df_AhgBLRP_Sep_rev, var = "AhgpsbD BLRP", season = "Sep")
+
+
+
+# Integration of all plots into a figure
+glist <- c(list(temperature_mar, temperature_sep, 
+                irradiance_mar, irradiance_sep),
+           glist_AhgCCA1_Mar, glist_AhgCCA1_Sep, glist_AhgSIG5_Mar,
+           glist_AhgSIG5_Sep, glist_AhgBLRP_Mar, glist_AhgBLRP_Sep)
+
+{(glist[[1]]+labs(tag = "A")) + (glist[[2]]+labs(tag = "B")) + 
+(glist[[3]]+labs(tag = "C")) + (glist[[4]]+labs(tag = "D")) +
+(glist[[5]]+labs(tag = "E")) + (glist[[7]]+labs(tag = "F")) + 
+glist[[6]] + glist[[8]] +
+(glist[[9]]+labs(tag = "G")) + (glist[[11]]+labs(tag = "H")) + glist[[10]] + glist[[12]] +
+(glist[[13]]+labs(tag = "I")) + (glist[[15]]+labs(tag = "J")) +
+glist[[14]] + glist[[16]] +
+plot_layout(ncol=2)} /
+legend_SunShade1 +
+plot_layout(heights = c(1, 0.05)) #+
+#plot_annotation(title = "Fig. S2") &
+#  theme(plot.tag = element_text(size = 10))
+
+```
+
